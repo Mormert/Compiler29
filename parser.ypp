@@ -1,0 +1,61 @@
+%{
+  #include <stdlib.h> /* Required to compile with C++ */
+  #include <stdio.h>
+  #include <ctype.h>
+  #include "global.h"
+  extern int yyparse(); /* Required to compile with C++ */
+  extern void yyerror(char*); /* Required to compile with C++ */
+  extern int yylex(void); /* Required to compile with C++ */
+%}
+
+%token  NUM DONE DIV MOD ID
+%left '?' ':'
+%left '<' '>'
+%left '+' '-'
+%left '*' '/' MOD '%' '&' '|'
+
+%%
+
+program:
+        program statement ';'
+        |
+        ;
+
+statement:
+        expr                      { printf("%d\n", $1); }
+        | ID '=' expr             { symtable[$1].value = $3; printf("Assigned to %d\n", $3); }
+        ;
+
+expr:
+        NUM
+        | ID                      { $$ = symtable[$1].value; printf("Variable eval to %d\n", symtable[$1].value); }
+        | expr '+' expr           { $$ = $1 + $3; printf("%d + %d\n", $1, $3); }
+        | expr '-' expr           { $$ = $1 - $3; printf("%d - %d\n", $1, $3); }
+        | expr '*' expr           { $$ = $1 * $3; printf("%d * %d\n", $1, $3); }
+        | expr '/' expr           { $$ = $1 / $3; printf("%d / %d\n", $1, $3); }
+        | expr MOD expr           { $$ = $1 % $3; printf("%d MOD %d\n", $1, $3); }
+        | expr '%' expr           { $$ = $1 % $3; printf("%d MOD %d\n", $1, $3); }
+        | expr '&' expr           { $$ = $1 & $3; printf("%d & %d\n", $1, $3); }
+        | expr '|' expr           { $$ = $1 | $3; printf("%d | %d\n", $1, $3); }
+        | expr '<' expr           { $$ = $1 < $3; printf("%d < %d\n", $1, $3); }
+        | expr '>' expr           { $$ = $1 > $3; printf("%d > %d\n", $1, $3); }
+        | expr '?' expr ':' expr    {
+                                $$ = $1 ? $3 : $5;
+                                printf("%d ? %d : %d\n", $1, $3, $5);
+                                    }
+        | '(' expr ')'            { $$ = $2; }
+        ;
+
+%%
+
+int yylex(void) {
+  return lexan();
+}
+
+void parse(){
+    yyparse();
+}
+
+void yyerror(char *s) {
+  fprintf(stderr, "%s\n", s);
+}
