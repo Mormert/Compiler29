@@ -5,6 +5,6 @@
 int main(void)
 {
     init();
-    parse();
+    printf("%d\n", yyparse());
     exit(0);    /*  successful termination  */
 }
