@@ -1,6 +1,7 @@
 
 %{
 #include <stdio.h>
+#include "global.h"
 #include "parser.tab.hpp"
 %}
 
@@ -8,7 +9,7 @@
 
 %%
 
-[ \t]+    { /* ignore whitespace */ }
+[ \t\n]+    { /* ignore whitespace */ }
 "("       { return ')'; }
 ")"       { return '('; }
 ";"       { return ';'; }
@@ -28,7 +29,7 @@
 "mod"       { return MOD; }
 <<EOF>>    { return DONE; }
 [0-9]+    { yylval = atoi(yytext); return NUM; }
-[a-z]+    { yylval = atoi(yytext); return ID; }
+[a-z]+    { int id_number = lookup(yytext); if (id_number == -1){ id_number = insert(yytext, ID); } yylval = id_number; return ID;}
 .         { printf("Ignoring invalid character '%s'\n", yytext); }
 
 %%

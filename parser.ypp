@@ -4,7 +4,7 @@
   #include <ctype.h>
   #include <math.h>
   #include "global.h"
-  extern "C" int yylex(void);
+  extern int yylex(void);
   extern int yyparse(); /* Required to compile with C++ */
   extern void yyerror(char*); /* Required to compile with C++ */
   extern int yylex(void); /* Required to compile with C++ */
