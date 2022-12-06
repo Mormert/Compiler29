@@ -4,7 +4,8 @@
 #include <ctype.h>  /* ... and for character test routines */
 #include <stdlib.h> /* ... and for some standard routines, such as exit */
 #include <string.h> /* ... and for string routines */
-
+#include <memory>
+#include "TreeNode.h"
 #include "parser.tab.hpp"
 
 #define MAX_ID_LENGTH  128  /* for the buffer size */
