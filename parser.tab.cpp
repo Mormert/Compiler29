@@ -1666,4 +1666,12 @@ void yyerror(char *s) {
   fprintf(stderr, "%s\n", s);
 }
 
+int yylex(void) {
+  return lexan();
+}
+
+void parse(){
+    yyparse();
+}
+
 

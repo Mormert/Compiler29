@@ -5,7 +5,9 @@
 int main(void)
 {
     init();
-    printf("%d\n", yyparse());
+    // printf("%d\n", yyparse());
     // lexan();
+    parse();
+
     exit(0);    /*  successful termination  */
 }

@@ -18,7 +18,7 @@ int lexan()  /*  lexical analyzer  */
         else if (isdigit(c)) {  /*  c is a digit  */
             ungetc(c, stdin);
             scanf("%d", &token_value);
-            yylval = token_value; // <--- Don't forget to set yylval!!!
+            yylval.i = token_value; // <--- Don't forget to set yylval!!!
             return NUM;
         }
         else if (isalpha(c)) {  /*  c is a letter */
@@ -36,7 +36,7 @@ int lexan()  /*  lexical analyzer  */
             if (id_number == -1)
                 id_number = insert(lexeme, ID);
             token_value = id_number;
-            yylval = symtable[id_number].token_type; // <--- Don't forget to set yylval!!!
+            yylval.i = symtable[id_number].token_type; // <--- Don't forget to set yylval!!!
             return symtable[id_number].token_type;
         }
         else if (c == EOF)
