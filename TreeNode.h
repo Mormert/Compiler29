@@ -13,6 +13,8 @@ public:
 
     static void printTree(TreeNode* node);
 
+    static int executeTree(TreeNode* node);
+
 private:
     // If leaf:
     int type, value;

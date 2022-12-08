@@ -4,6 +4,7 @@
 #include <ctype.h>  /* ... and for character test routines */
 #include <stdlib.h> /* ... and for some standard routines, such as exit */
 #include <string.h> /* ... and for string routines */
+#include <sstream>
 #include <memory>
 #include "TreeNode.h"
 #include "parser.tab.hpp"
@@ -15,6 +16,8 @@
 
 extern int token_value;   /*  value of token attribute */  
 extern int lineno;
+
+extern FILE* sourceCode;
 
 struct symentry {  /*  form of symbol table entry  */
     char *lexeme; 

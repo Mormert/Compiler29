@@ -6,18 +6,20 @@ char lexeme[MAX_ID_LENGTH + 1];
 int  lineno = 1;
 int  token_value = NONE;
 
+FILE* sourceCode{};
+
 int lexan()  /*  lexical analyzer  */
 {
     int c;
     while(1) {
-        c = getchar();
+        c = getc(sourceCode);
         if (c == ' ' || c == '\t')
             ;  /*  strip out white space  */
         else if (c == '\n')
             lineno = lineno + 1;
         else if (isdigit(c)) {  /*  c is a digit  */
-            ungetc(c, stdin);
-            scanf("%d", &token_value);
+            ungetc(c, sourceCode);
+            fscanf(sourceCode, "%d", &token_value);
             yylval.i = token_value; // <--- Don't forget to set yylval!!!
             return NUM;
         }
@@ -27,11 +29,11 @@ int lexan()  /*  lexical analyzer  */
                 lexeme[chars++] = c; 
                 if (chars > MAX_ID_LENGTH)
                     error("identifier too long");
-                c = getchar();
+                c = getc(sourceCode);
             }
             lexeme[chars] = EOS;
             if (c != EOF)
-                ungetc(c, stdin);
+                ungetc(c, sourceCode);
 
             if(strcmp(lexeme, "while") == 0){
                 return WHILE;

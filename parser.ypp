@@ -42,7 +42,10 @@ program:
         ;
 
 function:
-    function statement      { TreeNode::printTree($2);}
+    function statement          {
+        TreeNode::printTree($2);
+        TreeNode::executeTree($2)
+                                }
     | /* empty */
     ;
 

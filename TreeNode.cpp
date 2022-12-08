@@ -1,6 +1,8 @@
 #include "TreeNode.h"
 #include "global.h"
 
+#include <iostream>
+
 TreeNode*
 TreeNode::makeLeaf(int type, int value) {
     auto leaf = new TreeNode();
@@ -95,4 +97,58 @@ void TreeNode::printTree(TreeNode* node, int level) {
             printTree(node->a1, level);
             break;
     }
+}
+
+int TreeNode::executeTree(TreeNode *node) {
+    if(!node){
+        return 0;
+    }
+
+    int v = 0;
+    switch (node->type) {
+        case NUM:
+            return node->value;
+        case ID:
+            return symtable[node->value].value;
+        case WHILE:
+            while(executeTree(node->a0))
+            {
+                executeTree(node->a1);
+            }
+            return 0;
+        case IF:
+            if(executeTree(node->a0)){
+                executeTree(node->a1);
+            }else if(node->a2 != nullptr){
+                executeTree(node->a2);
+            }
+            return 0;
+        case PRINT:
+            printf("%d\n", executeTree(node->a0));
+            return 0;
+        case READ:
+            std::cout << "\nENTER INPUT FOR READ (" << symtable[node->a0->value].lexeme << "):" << std::flush;
+            std::cin >> v;
+            return symtable[node->a0->value].value = v;
+        case ';':
+            executeTree(node->a0);
+            return executeTree(node->a1);
+        case '=':
+            v = executeTree(node->a1);
+            return symtable[node->a0->value].value = v;
+        case '+':
+            return executeTree(node->a0) + executeTree(node->a1);
+        case '-':
+            return executeTree(node->a0) - executeTree(node->a1);
+        case '*':
+            return executeTree(node->a0) * executeTree(node->a1);
+        case '/':
+            return executeTree(node->a0) / executeTree(node->a1);
+        case '<':
+            return executeTree(node->a0) < executeTree(node->a1);
+        case '>':
+            return executeTree(node->a0) > executeTree(node->a1);
+    }
+    return 0;
+
 }
