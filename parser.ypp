@@ -38,7 +38,7 @@
 %%
 
 program:
-        function '.' { printf("\nFINISHED\n"); exit(0); }
+        function DONE { printf("\nFINISHED\n"); exit(0); }
         ;
 
 function:
