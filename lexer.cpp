@@ -32,12 +32,29 @@ int lexan()  /*  lexical analyzer  */
             lexeme[chars] = EOS;
             if (c != EOF)
                 ungetc(c, stdin);
+
+            if(strcmp(lexeme, "while") == 0){
+                return WHILE;
+            }
+            if(strcmp(lexeme, "if") == 0){
+                return IF;
+            }
+            if(strcmp(lexeme, "else") == 0){
+                return ELSE;
+            }
+            if(strcmp(lexeme, "print") == 0){
+                return PRINT;
+            }
+            if(strcmp(lexeme, "read") == 0){
+                return READ;
+            }
+
             id_number = lookup(lexeme);
             if (id_number == -1)
                 id_number = insert(lexeme, ID);
             token_value = id_number;
-            yylval.i = symtable[id_number].token_type; // <--- Don't forget to set yylval!!!
-            return symtable[id_number].token_type;
+            yylval.i = id_number; // <--- Don't forget to set yylval!!!
+            return ID;
         }
         else if (c == EOF)
             return DONE;

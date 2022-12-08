@@ -10,15 +10,18 @@
   extern void yyerror(char*); /* Required to compile with C++ */
 %}
 
-%token  NUM DONE DIV MOD ID
+%token  NUM DONE DIV MOD ID WHILE IF PRINT READ
 
-%left '='
+%right '='
 %left '?' ':'
 %left '<' '>'
 %left '+' '-'
-%left '*' '/' MOD '%' '&' '|'
+%left '*' '/' MOD '%'
+%right '&' '|'
 %left '^'
 
+%nonassoc IFX
+%nonassoc ELSE
 
 %union {
   int i;
@@ -27,6 +30,7 @@
 
 %type <p> expr;
 %type <p> statement;
+%type <p> statement_list;
 
 %type <i> NUM;
 %type <i> ID;
@@ -34,13 +38,28 @@
 %%
 
 program:
-        statement '.' { TreeNode::printTree($1); }
+        function '.' { printf("\nFINISHED\n"); exit(0); }
         ;
 
+function:
+    function statement      { TreeNode::printTree($2);}
+    | /* empty */
+    ;
 
 statement:
-        expr ';' statement        { $$ = TreeNode::makeNode(';', $1) }
-        |                         { printf("empty\n"); }
+          ';'                                       { $$ = TreeNode::makeNode(';'); }
+        | expr ';'                                  { $$ = $1 }
+        | '{' statement_list '}'                    { $$ = $2 }
+        | WHILE '(' expr ')' statement              { $$ = TreeNode::makeNode(WHILE, $3, $5); }
+        | IF '(' expr ')' statement %prec IFX       { $$ = TreeNode::makeNode(IF, $3, $5); }
+        | IF '(' expr ')' statement ELSE statement  { $$ = TreeNode::makeNode(IF, $3, $5, $7); }
+        | PRINT '(' expr ')' ';'                    { $$ = TreeNode::makeNode(PRINT, $3); }
+        | READ '(' ID ')' ';'                       { $$ = TreeNode::makeNode(READ, TreeNode::makeLeaf(ID, $3)); }
+        ;
+
+statement_list:
+        statement                   { $$ = $1 }
+        | statement_list statement  { $$ = TreeNode::makeNode(';', $1, $2); }
         ;
 
 expr:

@@ -43,7 +43,13 @@
      DONE = 259,
      DIV = 260,
      MOD = 261,
-     ID = 262
+     ID = 262,
+     WHILE = 263,
+     IF = 264,
+     PRINT = 265,
+     READ = 266,
+     IFX = 267,
+     ELSE = 268
    };
 #endif
 /* Tokens.  */
@@ -52,19 +58,25 @@
 #define DIV 260
 #define MOD 261
 #define ID 262
+#define WHILE 263
+#define IF 264
+#define PRINT 265
+#define READ 266
+#define IFX 267
+#define ELSE 268
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 23 "parser.ypp"
+#line 26 "parser.ypp"
 {
   int i;
   TreeNode* p;
 }
 /* Line 1529 of yacc.c.  */
-#line 68 "parser.tab.hpp"
+#line 80 "parser.tab.hpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -42,6 +42,34 @@ void TreeNode::printTree(TreeNode* node, int level) {
             printf("%d\n", node->value);
             break;
 
+        case WHILE:
+            printf("%*s", 2*level, "");
+            printf("while");
+            TreeNode::printTree(node->a0, level+1);
+            TreeNode::printTree(node->a1, level+1);
+            break;
+
+        case IF:
+            printf("%*s", 2*level, "");
+            printf("if");
+            TreeNode::printTree(node->a0, level+1);
+            TreeNode::printTree(node->a1, level+1);
+            TreeNode::printTree(node->a2, level+1);
+            break;
+
+        case PRINT:
+            printf("%*s", 2*level, "");
+            printf("print");
+            TreeNode::printTree(node->a0, level+1);
+            break;
+
+        case READ:
+            printf("%*s", 2*level, "");
+            printf("read");
+            TreeNode::printTree(node->a0, level+1);
+            break;
+
+
         case '+':
         case '-':
         case '*':
