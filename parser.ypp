@@ -38,16 +38,12 @@
 %%
 
 program:
-        function DONE { printf("\nFINISHED\n"); exit(0); }
+        statement_list DONE {
+            TreeNode::printTree($1);
+            TreeNode::executeTree($1);
+            printf("\nFINISHED\n"); exit(0);
+        }
         ;
-
-function:
-    function statement          {
-        TreeNode::printTree($2);
-        TreeNode::executeTree($2)
-                                }
-    | /* empty */
-    ;
 
 statement:
           ';'                                       { $$ = TreeNode::makeNode(';'); }

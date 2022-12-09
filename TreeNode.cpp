@@ -148,6 +148,10 @@ int TreeNode::executeTree(TreeNode *node) {
             return executeTree(node->a0) < executeTree(node->a1);
         case '>':
             return executeTree(node->a0) > executeTree(node->a1);
+        case '%':
+            return executeTree(node->a0) % executeTree(node->a1);
+        default:
+            printf("ERROR: UNKNOWN NODE TYPE : %c", node->type); exit(0);
     }
     return 0;
 
