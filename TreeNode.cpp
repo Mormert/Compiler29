@@ -184,12 +184,16 @@ void TreeNode::generateStackMachine(TreeNode *node, StackMachine &sm) {
         case IF:
             generateStackMachine(node->a0, sm);
             if(node->a2 != nullptr){ // If there is an else-clause
+                generateStackMachine(node->a0, sm); // there must be a better way to do this, than running the if(x) again?
                 sm.append({gofalse, lbl1 = lbl++});
-                generateStackMachine(node->a1, sm);
                 sm.append({gotrue, lbl2 = lbl++});
                 sm.append({label, lbl1});
                 generateStackMachine(node->a2,sm);
+                sm.append({jump, lbl1 = lbl++});
                 sm.append({label, lbl2});
+                generateStackMachine(node->a1, sm);
+                sm.append({label, lbl1});
+
             } else { // Regular if
                 sm.append({gofalse, lbl1 = lbl++});
                 generateStackMachine(node->a1, sm);
