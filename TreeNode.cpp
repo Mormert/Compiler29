@@ -156,3 +156,100 @@ int TreeNode::executeTree(TreeNode *node) {
     return 0;
 
 }
+
+void TreeNode::generateStackMachine(TreeNode *node, StackMachine &sm) {
+
+    if(!node) {
+        return;
+    }
+
+    int lbl1{};
+    int lbl2{};
+
+    switch (node->type) {
+        case NUM:
+            sm.append({push, node->value});
+            return;
+        case ID:
+            sm.append({rvalue, node->value});
+            return;
+        case WHILE:
+            sm.append({label, lbl1 = lbl++});
+            generateStackMachine(node->a0, sm);
+            sm.append({gofalse, lbl2 = lbl++});
+            generateStackMachine(node->a1, sm);
+            sm.append({jump, lbl1});
+            sm.append({label, lbl2});
+            return;
+        case IF:
+            generateStackMachine(node->a0, sm);
+            if(node->a2 != nullptr){ // If there is an else-clause
+                sm.append({gofalse, lbl1 = lbl++});
+                generateStackMachine(node->a1, sm);
+                sm.append({gotrue, lbl2 = lbl++});
+                sm.append({label, lbl1});
+                generateStackMachine(node->a2,sm);
+                sm.append({label, lbl2});
+            } else { // Regular if
+                sm.append({gofalse, lbl1 = lbl++});
+                generateStackMachine(node->a1, sm);
+                sm.append({label, lbl1});
+            }
+            return;
+        case PRINT:
+            generateStackMachine(node->a0, sm);
+            sm.append({stackop_write});
+            return;
+        case READ:
+            sm.append({lvalue, node->a0->value});
+            generateStackMachine(node->a1, sm);
+            sm.append({stackop_read});
+            sm.append({assign});
+        case ';':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            return;
+        case '=':
+            sm.append({lvalue, node->a0->value});
+            generateStackMachine(node->a1, sm);
+            sm.append({assign});
+            return;
+        case '+':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            sm.append(plus);
+            return;
+        case '-':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            sm.append(minus);
+            return;
+        case '*':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            sm.append(times);
+            return;
+        case '/':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            sm.append(divide);
+            return;
+        case '<':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            sm.append(lt);
+            return;
+        case '>':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            sm.append(gt);
+            return;
+        case '%':
+            generateStackMachine(node->a0, sm);
+            generateStackMachine(node->a1, sm);
+            sm.append(modulo);
+            return;
+        default:
+            printf("ERROR: UNKNOWN NODE TYPE : %c", node->type); exit(0);
+    }
+}

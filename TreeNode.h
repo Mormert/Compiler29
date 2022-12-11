@@ -2,6 +2,7 @@
 #define COMPILERS_01_29_TREENODE_H
 
 #include <memory>
+#include "StackMachine.h"
 
 class TreeNode {
 public:
@@ -15,6 +16,8 @@ public:
 
     static int executeTree(TreeNode* node);
 
+    static void generateStackMachine(TreeNode* node, StackMachine& smOut);
+
 private:
     // If leaf:
     int type, value;
@@ -24,6 +27,7 @@ private:
 
     static void printTree(TreeNode* node, int level);
 
+    static inline int lbl{};
 };
 
 

@@ -26,5 +26,7 @@ int main(void)
 
     rewind(sourceCode);
 
+    // See parser.ypp "program:"
     parse();
+
 }

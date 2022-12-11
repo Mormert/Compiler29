@@ -40,7 +40,28 @@
 program:
         statement_list DONE {
             TreeNode::printTree($1);
-            TreeNode::executeTree($1);
+            //TreeNode::executeTree($1);
+
+            StackMachine sm;
+            TreeNode::generateStackMachine($1, sm);
+            sm.append(Instruction(halt));
+            try {
+                sm.showstate();
+                sm.list_program();
+                sm.set_trace(0);
+                printf("RUNNING ...\n\n");
+                sm.run();
+                printf("\n... FINISHED RUNNING!\n\n");
+                sm.showstate();
+            }
+            catch(Exception& e) {
+                std::cout << "*** Exception caught: " << e.message() << std::endl;
+                sm.showstate();
+                sm.list_program();
+            }
+            catch(...) {
+                std::cout << "Unknown exception." << std::endl;
+            }
             printf("\nFINISHED\n"); exit(0);
         }
         ;
