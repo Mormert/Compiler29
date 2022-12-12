@@ -257,3 +257,107 @@ void TreeNode::generateStackMachine(TreeNode *node, StackMachine &sm) {
             printf("ERROR: UNKNOWN NODE TYPE : %c", node->type); exit(0);
     }
 }
+
+TreeNode *TreeNode::optimizeTree(TreeNode *node) {
+    auto rootNode = new TreeNode;
+    optimizeTreeNode(node, rootNode);
+    printf("\nOptimized tree:\n\n");
+    printTree(rootNode);
+    printf("\n");
+    return rootNode;
+}
+
+void TreeNode::optimizeTreeNode(TreeNode *originalNode, TreeNode *newNode) {
+
+    switch (originalNode->type) {
+        case '+':
+            // Remove ID + NUM like x + 0, reduce to leaf with only x as value
+            if(originalNode->a0->type == ID && originalNode->a1->type == NUM){
+                if(originalNode->a1->value == 0){
+                    newNode->type = ID;
+                    newNode->value = originalNode->a0->value;
+                    return;
+                }
+            }
+            // If both are numbers, then reduce to their sum
+            if(originalNode->a0->type == NUM && originalNode->a1->type == NUM){
+                newNode->type = NUM;
+                newNode->value = originalNode->a0->value + originalNode->a1->value;
+                return;
+            }
+            break;
+        case '*': // Remove ID * NUM like x * 1, reduce to leaf with only x as value
+            if(originalNode->a0->type == ID && originalNode->a1->type == NUM){
+                if(originalNode->a1->value == 1){
+                    newNode->type = ID;
+                    newNode->value = originalNode->a0->value;
+                    return;
+                }
+            }
+            // If both are numbers, then reduce to their product
+            if(originalNode->a0->type == NUM && originalNode->a1->type == NUM){
+                newNode->type = NUM;
+                newNode->value = originalNode->a0->value * originalNode->a1->value;
+                return;
+            }
+            break;
+        case IF:
+            // Pre-evaluate if expressions with constant conditions
+            if(!exprContainsVariable(originalNode->a0)){ // Make sure that there is no variable in the IF( xx )
+                if(executeTree(originalNode->a0)){ // Execute whatever is inside IF( xx )
+                    *newNode = *originalNode->a1; // deep copy
+                }else{
+                    if(originalNode->a2){
+                        *newNode = *originalNode->a2; // deep copy
+                    }
+                }
+                return;
+            }
+
+        default:
+            break;
+    }
+
+    newNode->value = originalNode->value;
+    newNode->type = originalNode->type;
+
+    if(originalNode->a0){
+        auto new_a0 = new TreeNode;
+        newNode->a0 = new_a0;
+        optimizeTreeNode(originalNode->a0, new_a0);
+    }
+
+    if(originalNode->a1){
+        auto new_a1 = new TreeNode;
+        newNode->a1 = new_a1;
+        optimizeTreeNode(originalNode->a1, new_a1);
+    }
+
+    if(originalNode->a2){
+        auto new_a2 = new TreeNode;
+        newNode->a2 = new_a2;
+        optimizeTreeNode(originalNode->a2, new_a2);
+    }
+}
+
+bool TreeNode::exprContainsVariable(TreeNode *expr) {
+
+    if(!expr){
+        return false;
+    }
+
+    if(expr->type == ID){
+        return true;
+    }
+
+    if(exprContainsVariable(expr->a0)){
+        return true;
+    }
+
+    if(exprContainsVariable(expr->a1)){
+        return true;
+    }
+
+    return false;
+
+}

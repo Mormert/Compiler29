@@ -42,8 +42,10 @@ program:
             TreeNode::printTree($1);
             //TreeNode::executeTree($1);
 
+            auto optimizedTree = TreeNode::optimizeTree($1);
+
             StackMachine sm;
-            TreeNode::generateStackMachine($1, sm);
+            TreeNode::generateStackMachine(optimizedTree, sm);
             sm.append(Instruction(halt));
             try {
                 sm.showstate();

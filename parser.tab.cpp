@@ -442,9 +442,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    41,    41,    70,    71,    72,    73,    74,    75,    76,
-      77,    81,    82,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96,    97,    98,    99,   100
+       0,    41,    41,    72,    73,    74,    75,    76,    77,    78,
+      79,    83,    84,    88,    89,    90,    91,    92,    93,    94,
+      95,    96,    97,    98,    99,   100,   101,   102
 };
 #endif
 
@@ -1418,8 +1418,10 @@ yyreduce:
             TreeNode::printTree((yyvsp[(1) - (2)].p));
             //TreeNode::executeTree($1);
 
+            auto optimizedTree = TreeNode::optimizeTree((yyvsp[(1) - (2)].p));
+
             StackMachine sm;
-            TreeNode::generateStackMachine((yyvsp[(1) - (2)].p), sm);
+            TreeNode::generateStackMachine(optimizedTree, sm);
             sm.append(Instruction(halt));
             try {
                 sm.showstate();
@@ -1443,133 +1445,133 @@ yyreduce:
     break;
 
   case 3:
-#line 70 "parser.ypp"
+#line 72 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(';'); ;}
     break;
 
   case 4:
-#line 71 "parser.ypp"
+#line 73 "parser.ypp"
     { (yyval.p) = (yyvsp[(1) - (2)].p) ;}
     break;
 
   case 5:
-#line 72 "parser.ypp"
+#line 74 "parser.ypp"
     { (yyval.p) = (yyvsp[(2) - (3)].p) ;}
     break;
 
   case 6:
-#line 73 "parser.ypp"
+#line 75 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(WHILE, (yyvsp[(3) - (5)].p), (yyvsp[(5) - (5)].p)); ;}
     break;
 
   case 7:
-#line 74 "parser.ypp"
+#line 76 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(IF, (yyvsp[(3) - (5)].p), (yyvsp[(5) - (5)].p)); ;}
     break;
 
   case 8:
-#line 75 "parser.ypp"
+#line 77 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(IF, (yyvsp[(3) - (7)].p), (yyvsp[(5) - (7)].p), (yyvsp[(7) - (7)].p)); ;}
     break;
 
   case 9:
-#line 76 "parser.ypp"
+#line 78 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(PRINT, (yyvsp[(3) - (5)].p)); ;}
     break;
 
   case 10:
-#line 77 "parser.ypp"
+#line 79 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(READ, TreeNode::makeLeaf(ID, (yyvsp[(3) - (5)].i))); ;}
     break;
 
   case 11:
-#line 81 "parser.ypp"
+#line 83 "parser.ypp"
     { (yyval.p) = (yyvsp[(1) - (1)].p) ;}
     break;
 
   case 12:
-#line 82 "parser.ypp"
+#line 84 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(';', (yyvsp[(1) - (2)].p), (yyvsp[(2) - (2)].p)); ;}
     break;
 
   case 13:
-#line 86 "parser.ypp"
+#line 88 "parser.ypp"
     { (yyval.p) = TreeNode::makeLeaf(NUM, (yyvsp[(1) - (1)].i)) ;}
     break;
 
   case 14:
-#line 87 "parser.ypp"
+#line 89 "parser.ypp"
     { (yyval.p) = TreeNode::makeLeaf(ID, (yyvsp[(1) - (1)].i)) ;}
     break;
 
   case 15:
-#line 88 "parser.ypp"
+#line 90 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('=', TreeNode::makeLeaf(ID, (yyvsp[(1) - (3)].i)), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 16:
-#line 89 "parser.ypp"
+#line 91 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('+', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 17:
-#line 90 "parser.ypp"
+#line 92 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('-', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 18:
-#line 91 "parser.ypp"
+#line 93 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('*', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 19:
-#line 92 "parser.ypp"
+#line 94 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('/', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 20:
-#line 93 "parser.ypp"
+#line 95 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('^', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 21:
-#line 94 "parser.ypp"
+#line 96 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode(MOD, (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 22:
-#line 95 "parser.ypp"
+#line 97 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('%', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 23:
-#line 96 "parser.ypp"
+#line 98 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('&', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 24:
-#line 97 "parser.ypp"
+#line 99 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('|', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 25:
-#line 98 "parser.ypp"
+#line 100 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('<', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 26:
-#line 99 "parser.ypp"
+#line 101 "parser.ypp"
     { (yyval.p) = TreeNode::makeNode('>', (yyvsp[(1) - (3)].p), (yyvsp[(3) - (3)].p)) ;}
     break;
 
   case 27:
-#line 100 "parser.ypp"
+#line 102 "parser.ypp"
     { (yyval.p) = (yyvsp[(2) - (3)].p); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1573 "parser.tab.cpp"
+#line 1575 "parser.tab.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1783,7 +1785,7 @@ yyreturn:
 }
 
 
-#line 103 "parser.ypp"
+#line 105 "parser.ypp"
 
 
 void yyerror(char *s) {
